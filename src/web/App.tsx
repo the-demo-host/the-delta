@@ -54,8 +54,8 @@ export function App() {
 
       <img
         className="scenic-photo"
-        src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=80"
-        alt="A scenic mountain landscape"
+        src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80"
+        alt="A happy dog looking at the camera"
         width={1200}
         height={800}
       />

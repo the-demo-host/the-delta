@@ -22,6 +22,29 @@ This workflow applies only to the Live Q&A demo whose `local` remote points to
 GitHub. `README.md`, “Workshop server”, and the `live-qa` systemd service describe
 the served checkout and automatic rebuild.
 
+### Shared ownership
+
+The demo repository is intentionally shared by multiple users. Git's
+`detected dubious ownership` error is expected here, not by itself a landing
+blocker. After verifying the destination identity above, use narrowly scoped,
+per-command trust exceptions for this repository:
+
+```sh
+git -c safe.directory=/live -C /live status --short --branch
+git fetch --upload-pack='git -c safe.directory=/live/.git upload-pack' local main
+```
+
+Use the same `-c safe.directory=/live` prefix for other direct destination
+inspection commands if needed. Fetch and push spawn separate Git processes;
+put their trust exception explicitly in `--upload-pack` or `--receive-pack`,
+as shown here and below. An exception on the outer Git command alone may not
+reach those processes.
+
+Do not change global trust settings, trust all repositories with `*`, change
+ownership or permissions, or use elevated privileges. Actual filesystem
+permission failures remain blockers; this exception only addresses Git's
+ownership check and does not relax clean-worktree or fast-forward safeguards.
+
 1. Inspect the current diff, Git status, applicable instructions, remotes, and
    destination status. Confirm `/live` is on `main`, its tracked working tree is
    clean, and the local remote still identifies `/live/.git`. Preserve unrelated
@@ -78,7 +101,7 @@ new candidate before pushing.
 2. Push only the candidate to the local destination:
 
    ```sh
-   git push --receive-pack='git -c receive.denyCurrentBranch=updateInstead receive-pack' local HEAD:refs/heads/main
+   git push --receive-pack='git -c safe.directory=/live/.git -c receive.denyCurrentBranch=updateInstead receive-pack' local HEAD:refs/heads/main
    ```
 
    This per-command receiver configuration updates the checked-out branch only

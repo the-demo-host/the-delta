@@ -52,6 +52,14 @@ export function App() {
         <p>{EVENT_NAME}</p>
       </header>
 
+      <img
+        className="dog-photo"
+        src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=80"
+        alt="A golden retriever enjoying the outdoors"
+        width={1200}
+        height={800}
+      />
+
       <form className="ask" onSubmit={handleSubmit}>
         <label className="ask-question">
           <span>Your question</span>

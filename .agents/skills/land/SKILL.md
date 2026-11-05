@@ -88,11 +88,22 @@ new candidate before pushing.
    inspect the actual cause. For concurrent history advancement, fetch,
    integrate, and reverify. Stop rather than bypassing branch protection or
    permissions.
-3. Verify `git ls-remote origin refs/heads/main` reports the landed candidate
-   and the tracked checkout is clean. Pushing to origin does not itself deploy
-   the local workshop service; do not reset the database or restart the service
-   as a routine landing step.
-4. Report the destination commit, checks actually run, and any verified baseline
+3. **Mandatory deployment synchronization:** after the push succeeds, you
+   absolutely must go to `/live` and pull the landed branch:
+
+   ```sh
+   cd /live
+   git pull
+   ```
+
+   Do not treat the GitHub push as deployment complete. The workshop service
+   runs from `/live`, so skipping this step leaves the live demo on the old
+   revision. Stop and report any `cd` or `git pull` failure; do not reset,
+   clean, or force-push to work around it.
+4. Verify `git ls-remote origin refs/heads/main` reports the landed candidate
+   and the `/live` checkout is clean and contains that candidate. Do not reset
+   the database or restart the service as a routine landing step.
+5. Report the destination commit, checks actually run, and any verified baseline
    failures. A commit or branch publication alone is not success. If the push
    succeeded but deployment is separate or unavailable, state that plainly; do
    not claim local serving verification.

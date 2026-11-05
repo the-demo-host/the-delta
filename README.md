@@ -50,13 +50,32 @@ These commands are for whoever hosts the workshop, not for attendees. They requi
 | Command | What it does |
 |---------|--------------|
 | `npm install` | Installs dependencies. |
-| `npm run dev` | Starts the app in development mode at http://localhost:5173 and reruns the tests on every change. |
-| `npm start` | Runs the tests, builds the app and serves it at http://localhost:3000. |
+| `npm run dev` | Starts the app in development mode at http://localhost:5173/live/ and reruns the tests on every change. |
+| `npm run live` | Serves the app at http://localhost:3000/live/ and rebuilds it and reruns the tests on every change. |
+| `npm start` | Runs the tests, builds the app once and serves it at http://localhost:3000/live/. |
 | `npm test` | Runs all tests once. The feature tests fail until those features are finished. |
 | `npm run typecheck` | Checks the TypeScript types. |
 | `npm run reset` | Restores the sample questions and deletes everything else in the database. Stop the app first. |
 
-The progress page is at `/progress`.
+The progress page is at `/live/progress`.
+
+## Workshop server
+
+The app runs at https://demo.itisluiz.com/live/, and the progress page is at https://demo.itisluiz.com/live/progress. The repo is at `/live` on the server, and every user on the machine can read and write it.
+
+The `live-qa` system service runs `npm run live` from `/live`, so whichever code is checked out there goes live automatically. Its logs are available with `journalctl -u live-qa -f`. The host key is in `/etc/live-qa.env`, which only root can read.
+
+### Resetting between sessions
+
+```
+sudo systemctl stop live-qa
+cd /live
+git switch main
+git reset --hard start
+git clean -fd
+npm run reset
+sudo systemctl start live-qa
+```
 
 ### Settings
 

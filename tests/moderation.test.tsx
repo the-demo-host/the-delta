@@ -76,7 +76,7 @@ describe("moderation UI", () => {
 
     await waitFor(() => {
       const call = calls.find(({ method }) => method === "PATCH");
-      expect(call?.url).toBe("/api/questions/7/status");
+      expect(call?.url).toBe("/live/api/questions/7/status");
       expect(call?.headers.get("X-Host-Key")).toBe(HOST_KEY);
     });
   });
@@ -88,7 +88,7 @@ describe("moderation UI", () => {
     fireEvent.click(await screen.findByRole("button", { name: /answered/i }));
 
     await waitFor(() => {
-      expect(calls.find(({ method }) => method === "PATCH")?.url).toBe("/api/questions/7/status");
+      expect(calls.find(({ method }) => method === "PATCH")?.url).toBe("/live/api/questions/7/status");
     });
   });
 });

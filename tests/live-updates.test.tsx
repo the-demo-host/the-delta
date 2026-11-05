@@ -71,7 +71,7 @@ describe("live updates UI", () => {
     renderApp([question()]);
 
     await waitFor(() => {
-      expect(FakeEventSource.instances.map(({ url }) => url)).toContain("/api/events");
+      expect(FakeEventSource.instances.map(({ url }) => url)).toContain("/live/api/events");
     });
   });
 });

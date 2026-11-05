@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "concurrently -n api,web,tests \"tsx watch src/server/index.ts\" \"vite\" \"npm run progress:watch\"",
+    "live": "concurrently -n api,build,tests \"tsx watch src/server/index.ts\" \"vite build --watch\" \"npm run progress:watch\"",
     "build": "vite build",
     "start": "npm run progress && npm run build && tsx src/server/index.ts",
     "test": "vitest run",

@@ -8,5 +8,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     include: ["tests/**/*.test.{ts,tsx}"],
+    // Vitest ignores `base`, so the served sub-path has to be set here.
+    env: { BASE_URL: "/live/" },
   },
 });

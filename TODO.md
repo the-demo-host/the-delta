@@ -48,10 +48,10 @@ Each item describes the required outcome, not how to achieve it. Run `npm test` 
 - [x] Each required feature above has automated tests that define when it's done.
 - [x] A progress page shows which features are done, in a form readable on a projector.
 - [x] Sample questions are available, so the app doesn't start empty.
-- [ ] The facilitator can reset the project to its starting state between sessions. Only the database can be reset so far, not the code.
+- [x] The facilitator can reset the project to its starting state between sessions.
 
 ## Open decisions
 
-- [ ] Where do the code and the running app live?
+- [x] Where do the code and the running app live?
 - [ ] Which features do attendees complete, and which are finished before the session?
 - [ ] How long is the session, and how many people are attending?

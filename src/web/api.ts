@@ -1,5 +1,8 @@
 import type { NewQuestion, Progress, Question } from "../shared/types";
 
+// The app is served under a sub-path, so API URLs must not be written as "/api/...".
+export const API_BASE = `${import.meta.env.BASE_URL}api`;
+
 const VISITOR_ID_KEY = "live-qa-visitor-id";
 
 let fallbackVisitorId: string | null = null;
@@ -26,7 +29,7 @@ export function getVisitorId(): string {
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const response = await fetch(path, {
+  const response = await fetch(`${API_BASE}${path}`, {
     ...init,
     headers: {
       "Content-Type": "application/json",
@@ -43,16 +46,16 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export function fetchQuestions(): Promise<Question[]> {
-  return request("/api/questions");
+  return request("/questions");
 }
 
 export function postQuestion(question: NewQuestion): Promise<Question> {
-  return request("/api/questions", {
+  return request("/questions", {
     method: "POST",
     body: JSON.stringify(question),
   });
 }
 
 export function fetchProgress(): Promise<Progress> {
-  return request("/api/progress");
+  return request("/progress");
 }

@@ -66,7 +66,7 @@ describe("upvotes UI", () => {
 
     await waitFor(() => {
       const call = calls.find(({ method }) => method === "POST");
-      expect(call?.url).toBe("/api/questions/7/vote");
+      expect(call?.url).toBe("/live/api/questions/7/vote");
       expect(call?.headers.get("X-Visitor-Id")).toBeTruthy();
     });
   });

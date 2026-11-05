@@ -5,6 +5,7 @@ const apiPort = process.env.PORT ?? "3000";
 
 export default defineConfig({
   root: "src/web",
+  base: "/live/",
   plugins: [react()],
   build: {
     outDir: "../../dist",
@@ -12,7 +13,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": `http://localhost:${apiPort}`,
+      "/live/api": `http://127.0.0.1:${apiPort}`,
     },
   },
 });

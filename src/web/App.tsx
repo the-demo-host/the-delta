@@ -48,7 +48,7 @@ export function App() {
   return (
     <main className="page">
       <header className="masthead">
-        <h1>Live Q&amp;A</h1>
+        <h1>Live Q&amp;A (Chapter demo)</h1>
         <p>{EVENT_NAME}</p>
       </header>
 

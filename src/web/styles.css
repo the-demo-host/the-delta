@@ -1,0 +1,260 @@
+:root {
+  color-scheme: light dark;
+  --background: #f6f5f1;
+  --surface: #ffffff;
+  --text: #1d2125;
+  --muted: #5d6670;
+  --border: #d9d7cf;
+  --accent: #1f5f8b;
+  --accent-text: #ffffff;
+  --done: #1d7a4d;
+  --error: #a4262c;
+  --error-surface: #fbeaea;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #15181b;
+    --surface: #1f2428;
+    --text: #eef0f2;
+    --muted: #a3acb5;
+    --border: #363d43;
+    --accent: #6db3e3;
+    --accent-text: #0c1b26;
+    --done: #5fcf97;
+    --error: #ff9a9e;
+    --error-surface: #3a1f21;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.45;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.page {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.page-wide {
+  max-width: 60rem;
+}
+
+.masthead {
+  margin-bottom: 1.5rem;
+}
+
+.masthead h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.15;
+}
+
+.masthead p {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+}
+
+.ask {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.ask label span {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.ask textarea,
+.ask input {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.ask textarea {
+  resize: vertical;
+}
+
+.ask-footer {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.ask-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.post {
+  padding: 0.6rem 1.5rem;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 0.5rem;
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.error {
+  margin: 1rem 0 0;
+  padding: 0.6rem 0.8rem;
+  background: var(--error-surface);
+  border-radius: 0.5rem;
+  color: var(--error);
+}
+
+.notice {
+  color: var(--muted);
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.tab {
+  padding: 0.35rem 0.9rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.tab[aria-pressed="true"] {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.questions,
+.progress-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.question {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  padding: 0.9rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.vote {
+  display: grid;
+  flex: none;
+  justify-items: center;
+  width: 3.25rem;
+  padding: 0.35rem 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.question-text {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.question-meta {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.progress-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  font-size: 1.5rem;
+}
+
+.progress-mark {
+  width: 1.5em;
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
+}
+
+.progress-row[data-done="true"] .progress-mark {
+  color: var(--done);
+}
+
+.progress-title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.progress-count {
+  color: var(--muted);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 30rem) {
+  .ask-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .progress-row {
+    font-size: 1.15rem;
+  }
+}

@@ -53,9 +53,9 @@ export function App() {
       </header>
 
       <img
-        className="dog-photo"
-        src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=80"
-        alt="A golden retriever enjoying the outdoors"
+        className="scenic-photo"
+        src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=80"
+        alt="A scenic mountain landscape"
         width={1200}
         height={800}
       />

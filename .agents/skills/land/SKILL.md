@@ -1,7 +1,7 @@
 ---
 name: land
 description: >-
-  Land changes in the Live Q&A demo by pushing to the local served main branch.
+  Land changes in the Live Q&A demo by pushing the verified main branch to origin.
   Invoke only when the user explicitly requests landing or merging changes,
   not for review, preparation, passing checks, or skill installation.
 disable-model-invocation: true
@@ -9,7 +9,7 @@ metadata:
   delta-action: land
 ---
 
-# Land Live Q&A changes
+# Land Live Q&A changes to origin
 
 An explicit invocation authorizes landing the requested change. Proceed without
 asking for the same merge permission again. Stop for actual blockers or unclear
@@ -17,51 +17,31 @@ scope. Installing this skill alone does not authorize execution.
 
 ## Destination and safety
 
-This workflow applies only to the Live Q&A demo whose `local` remote points to
-`/live/.git`. The destination is the checked-out `main` branch in `/live`, not
-GitHub. `README.md`, “Workshop server”, and the `live-qa` systemd service describe
-the served checkout and automatic rebuild.
-
-### Shared ownership
-
-The demo repository is intentionally shared by multiple users. Git's
-`detected dubious ownership` error is expected here, not by itself a landing
-blocker. After verifying the destination identity above, use narrowly scoped,
-per-command trust exceptions for this repository:
-
-```sh
-git -c safe.directory=/live -C /live status --short --branch
-git fetch --upload-pack='git -c safe.directory=/live/.git upload-pack' local main
-```
-
-Use the same `-c safe.directory=/live` prefix for other direct destination
-inspection commands if needed. Fetch and push spawn separate Git processes;
-put their trust exception explicitly in `--upload-pack` or `--receive-pack`,
-as shown here and below. An exception on the outer Git command alone may not
-reach those processes.
-
-Do not change global trust settings, trust all repositories with `*`, change
-ownership or permissions, or use elevated privileges. Actual filesystem
-permission failures remain blockers; this exception only addresses Git's
-ownership check and does not relax clean-worktree or fast-forward safeguards.
+This workflow applies only to the Live Q&A demo repository. The destination is
+the `main` branch of the configured `origin` remote. Verify that `origin`
+identifies the intended repository before publishing; stop if it is missing,
+ambiguous, or points somewhere unexpected. Do not substitute `local`, a hosted
+pull request, or another remote.
 
 1. Inspect the current diff, Git status, applicable instructions, remotes, and
-   destination status. Confirm `/live` is on `main`, its tracked working tree is
-   clean, and the local remote still identifies `/live/.git`. Preserve unrelated
-   changes, including untracked files; do not stash, reset, clean, or force-push.
-   Stop if requested scope or destination identity is ambiguous.
+   destination status. Confirm the current branch is `main`, the tracked working
+   tree has no unrelated changes, and `origin` identifies the intended
+   repository. Preserve unrelated changes, including untracked files;
+   do not stash, reset, clean, or force-push. Stop if requested scope or
+   destination identity is ambiguous.
 2. Check current repository contribution policies and hooks. Honor applicable
    signing, review, and verification requirements if any have been added. Do not
-   bypass them. No hosted PR or CI workflow was present when configured; do not
-   invent one or publish to `origin`.
+   bypass them. If the repository requires a pull request or forbids direct
+   pushes to `main`, stop and report that requirement rather than bypassing it.
 3. Use Node.js >=24 (`package.json`, `engines.node`). Verify dependencies and
    runtime availability. If dependencies are missing, use `npm ci` with the
    committed `package-lock.json`; stop on installation errors.
-4. Fetch `main` from `local`, record the destination commit, and inspect divergence.
-   Stage only explicitly scoped files and commit the requested work with a
-   concise descriptive message, preserving configured signing settings. Prefix
-   editor-capable Git commands with `GIT_EDITOR=true`. Do not include secrets,
-   generated output, or unrelated work. Existing scoped commits may be reused.
+4. Fetch `main` from `origin`, record the destination commit, and inspect
+   divergence. Stage only explicitly scoped files and commit the requested work
+   with a concise descriptive message, preserving configured signing settings.
+   Prefix editor-capable Git commands with `GIT_EDITOR=true`. Do not include
+   secrets, generated output, or unrelated work. Existing scoped commits may be
+   reused.
 5. Merge the fetched destination history into the landing candidate without
    rewriting shared history. Resolve clear-cut conflicts automatically when the
    intended result is evident. Preserve unrelated work. Stop and explain
@@ -93,37 +73,26 @@ Verify the final integrated candidate, not an earlier version:
 If destination history advances, integrate it and repeat verification on the
 new candidate before pushing.
 
-## Push and verify
+## Push to origin and verify
 
 1. Recheck destination branch, cleanliness, identity, and tip immediately before
    pushing. Confirm the verified candidate contains that tip. Do not overwrite
    concurrent edits.
-2. Push only the candidate to the local destination:
+2. Push only the candidate to `origin`:
 
    ```sh
-   git push --receive-pack='git -c safe.directory=/live/.git -c receive.denyCurrentBranch=updateInstead receive-pack' local HEAD:refs/heads/main
+   git push origin HEAD:refs/heads/main
    ```
 
-   This per-command receiver configuration updates the checked-out branch only
-   when Git considers its index and worktree safe. It does not persist a
-   configuration change. Never substitute `ignore`, `warn`, force-push, or a
-   direct ref update. Respect rejection; inspect the actual cause. For concurrent
-   history advancement, fetch, integrate, and reverify. For dirty destination or
-   permissions problems, stop rather than changing ownership, clearing work, or
-   bypassing safeguards.
-3. Verify the destination `refs/heads/main` and `/live` checked-out `HEAD` equal
-   the landed candidate and the tracked checkout is clean. The service runs
-   `npm run live` (`package.json`, `scripts.live`), which watches the server,
-   rebuilds the frontend, and updates test progress. Do not reset the database
-   or restart the service as routine landing steps.
-4. Confirm the service is active and request
-   `http://127.0.0.1:3000/live/`. Allow a bounded rebuild interval and verify that
-   the served page and referenced assets reflect the change where practical;
-   an HTTP success alone is not proof that the new frontend was built.
-   `README.md`, “Workshop server”, documents the public URL
-   `https://demo.itisluiz.com/live/`.
-5. Report the destination commit, checks actually run, any verified baseline
-   failures, and serving verification. A commit or branch publication alone is
-   not success. If the push succeeded but serving verification failed, state
-   that the code landed but deployment verification is blocked; do not claim
-   nothing landed or attempt an unrequested rollback.
+   Never substitute a force-push or a direct ref update. Respect rejection;
+   inspect the actual cause. For concurrent history advancement, fetch,
+   integrate, and reverify. Stop rather than bypassing branch protection or
+   permissions.
+3. Verify `git ls-remote origin refs/heads/main` reports the landed candidate
+   and the tracked checkout is clean. Pushing to origin does not itself deploy
+   the local workshop service; do not reset the database or restart the service
+   as a routine landing step.
+4. Report the destination commit, checks actually run, and any verified baseline
+   failures. A commit or branch publication alone is not success. If the push
+   succeeded but deployment is separate or unavailable, state that plainly; do
+   not claim local serving verification.

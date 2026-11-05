@@ -1,4 +1,4 @@
-import { mkdirSync } from "node:fs";
+import { chmodSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import type { Question } from "../shared/types";
@@ -26,6 +26,15 @@ export function openDb(path: string): Db {
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     )
   `);
+
+  // Whoever resets the database, the app and every other user must still be able to write to it.
+  if (path !== ":memory:") {
+    try {
+      chmodSync(path, 0o666);
+    } catch {
+      // Only the file's owner can change its mode, and the owner already set it.
+    }
+  }
   return db;
 }
 

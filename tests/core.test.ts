@@ -1,7 +1,8 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { openDb } from "../src/server/db";
 import { seedIfEmpty } from "../src/server/seed";
 import { readProgress } from "../src/server/progress";
 import { setup } from "./helpers";
@@ -76,6 +77,20 @@ describe("sample questions", () => {
     seedIfEmpty(db);
 
     expect(await list()).toHaveLength(1);
+  });
+});
+
+describe("database file", () => {
+  it("is writable by every user", () => {
+    const directory = mkdtempSync(join(tmpdir(), "live-qa-"));
+    const path = join(directory, "test.db");
+
+    try {
+      openDb(path).close();
+      expect(statSync(path).mode & 0o777).toBe(0o666);
+    } finally {
+      rmSync(directory, { recursive: true });
+    }
   });
 });
 

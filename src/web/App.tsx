@@ -54,10 +54,10 @@ export function App() {
 
       <img
         className="scenic-photo"
-        src="https://images.unsplash.com/photo-1599896375807-cf6cf2932e7d?auto=format&fit=crop&w=1200&q=80"
-        alt="A border collie looking at the camera"
+        src="https://commons.wikimedia.org/wiki/Special:FilePath/Lightning%20McQueen%20%2834615708803%29.jpg?width=1200"
+        alt="Lightning McQueen from Cars"
         width={1200}
-        height={800}
+        height={737}
       />
 
       <form className="ask" onSubmit={handleSubmit}>
